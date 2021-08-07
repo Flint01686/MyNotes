@@ -6,7 +6,7 @@ const Pagenation: FC = ({children}) =>
 {
     return (
         <PagenationStyle center>
-            <Button style={{display: 'none', }}> prev </Button>
+            <Button style={{visibility: 'hidden', }}> prev </Button>
             {children}
             <Button> next </Button>
         </PagenationStyle>

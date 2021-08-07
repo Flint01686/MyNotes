@@ -1,28 +1,25 @@
 import React, { FC } from 'react'
-import { Card, Button } from 'react-bootstrap';
-import { note } from '../Interfaces/Note';
+import { Card } from 'react-bootstrap';
+import { NodeCardStyle } from '../../style/NoteCardSytle';
+import { Note } from '../Interfaces/Note';
+import TagInput from './TagInput'
 
-const NoteCard: FC<note> = ({img="", tags=[], text=""}) =>
+const NoteCard: FC<Note> = ({img="", tags=[], text=""}) =>
 {
-    let style = {
-        width: '18rem',
-        ":hover": {
-            transition: 'all 200ms', 
-            backgroundColor: 'dimgrey',
-        }
-    }
     return (
-        <Card style={style}>
-            <Card.Img variant="top" src={img} />
-            <Card.Body>
-                <Card.Title>
-                    <input type="text" defaultValue={tags.join("")} />
-                </Card.Title>
-                <Card.Text>
-                    {text}
-                </Card.Text>
-            </Card.Body>
-        </Card>
+        <NodeCardStyle>
+            <Card className="card">
+                <Card.Img variant="top" src={img} />
+                <Card.Body>
+                    <Card.Title>
+                        <TagInput tags={tags} readonly={true}></TagInput>        
+                    </Card.Title>
+                    <Card.Text>
+                        {text}
+                    </Card.Text>
+                </Card.Body>
+            </Card>
+        </NodeCardStyle>   
     )
 }
 export default NoteCard

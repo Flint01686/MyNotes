@@ -2,7 +2,12 @@ import React, { FC } from 'react'
 import { PinnedNotesStyle } from '../../../style/PinnedNotesStyle'
 import NoteCard from '../../UI/NoteCard'
 
-const PinnedNotes: FC  = () => 
+export interface PinnedNotesI
+{
+    fullsize?: boolean
+}
+
+const PinnedNotes: FC<PinnedNotesI>  = ({ fullsize=false }) => 
 {
     
     let i:number =1;
@@ -24,8 +29,9 @@ const PinnedNotes: FC  = () =>
             tags = {["lmao"]}></NoteCard>)
 
     return (
-        <div style={{height: '100vh'}}>
-            <PinnedNotesStyle>
+        <div>
+            <PinnedNotesStyle fullsize={fullsize}>
+                <h3>Pinned notes</h3>
                 {arr}
             </PinnedNotesStyle>
         </div>      
