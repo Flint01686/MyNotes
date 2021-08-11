@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { TagInputStyle } from '../../style/TagInputStyle';
 import { TagListStyle } from '../../style/TagsListStyle';
 import Tag from './Tag'
@@ -11,14 +11,22 @@ interface TagInputI
 
 const TagInput: FC<TagInputI> = ({readonly, tags}) =>
 {    
+    let [currentTags, setCurrentTags] = useState<Array<string>>(tags);
+    let addTag = (tag: string | undefined) => {
+        if (!tag || currentTags.includes(tag)) return;
+        console.log(currentTags);        
+        setCurrentTags([...currentTags, tag])
+    }
+    const currentTag = useRef<HTMLInputElement>(null)
     return (
         <TagInputStyle>
             <TagListStyle>
-                { tags.map( (tag, key) => <Tag key={key}>{tag}</Tag>) }
+                {currentTags.map( (tag, key) => <Tag key={key}>{tag}</Tag>)}
             </TagListStyle>
             { readonly ? null : (
                 <div className="input__tags">
-                    <input type="text"/><button>+</button> 
+                    <input ref={currentTag} type="text"/>
+                    <button type="button" onClick={() => addTag(currentTag.current?.value)}>+</button> 
                 </div>
             )}
         </TagInputStyle>

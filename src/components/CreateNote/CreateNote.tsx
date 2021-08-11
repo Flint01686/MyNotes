@@ -10,11 +10,11 @@ const CreateNote: FC<Note> = ({tags, text, attachment}) =>
     return (
         <BaseLayout>
             <CreateNoteStyle>
-                <form action="">
+                <form method="post" action="http://localhost:1337/note/">
                     <h3>New Note</h3>
                     <div>
                         <h6>Text</h6>
-                        <textarea></textarea>
+                        <textarea>{text}</textarea>
                     </div>
 
                     <div className="block_inline">
@@ -24,7 +24,7 @@ const CreateNote: FC<Note> = ({tags, text, attachment}) =>
 
                     <div className="block_inline">
                         <h6>Tags:</h6>
-                        <TagInput readonly={false} tags={['lol', 'kek', 'zaza']}></TagInput>
+                        <TagInput readonly={false} tags={tags ?? []}></TagInput>
                     </div>
                     <Submit fontSize="32px" text="Create"></Submit>
                 </form>
