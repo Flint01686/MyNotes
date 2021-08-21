@@ -1,27 +1,54 @@
-import React, { FC, useState, useEffect} from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { Navbar } from 'react-bootstrap';
+import { Nav, Navbar } from 'react-bootstrap';
 import { switchToggle } from '../../store/reducers/toggleReducer';
 import { useIsMobile } from '../Hooks/useIsMobile';
 import Sidebar from '../UI/Sidebar';
 import PinnedNotes from '../Views/Home/PinnedNotes';
 import { RootState } from '../../store/reducers/rootReducer';
+import { HeaderStyle } from '../../style/HeaderStyle';
+import { Note } from '../Interfaces/Note';
+import { useHistory } from 'react-router';
+import { getPinnedNotes } from '../Requests';
 
 const Header: FC = () => 
 {
     const dispatch = useDispatch()
     const isToggleOn = useSelector((state: RootState) => state.toggle.isToggleOn)
+    const isMobile = useIsMobile()
+    const history = useHistory()
 
     let changeToogleState = () => {
         dispatch(switchToggle(!isToggleOn))
     } 
 
+    function Logout(){
+        localStorage.removeItem('accessToken');
+    }
+
     return (
         <>
-        <Navbar variant="dark" expand="lg" style={{backgroundColor: "#000"}}>
-            <Navbar.Brand style={{marginLeft: "50px"}} href="/">MyNotes</Navbar.Brand>
-            <Navbar.Toggle onClick={changeToogleState} style={isToggleOn ? {backgroundColor: '#444444'} : {}}/>
+        <Navbar  variant="dark" expand="lg" style={{backgroundColor: "#000"}}>
+            <HeaderStyle>
+                <div className="start brand">
+                    {isMobile ? <a href="/"><img src="/main.jpg" alt="My notes"/></a> : <Navbar.Brand href="/">MyNotes</Navbar.Brand>}
+                    {localStorage.getItem("accessToken") ? (<Nav>
+                        <Nav.Link href="/note/create">Create note</Nav.Link>
+                    </Nav>) : null}
+                </div>
+                
+                <div className="end">
+                    {!localStorage.getItem('accessToken') ? <>
+                        <Nav.Link href="/auth">Login</Nav.Link>
+                        <Nav.Link href="/register">Register</Nav.Link>
+                        </> : <Nav.Link onClick={()=> Logout()} href="/">Logout</Nav.Link>}
+                    {history.location.pathname === "/" || history.location.pathname === "/home" ? (
+                        isMobile ? <Navbar.Toggle onClick={changeToogleState} 
+                        style={isToggleOn ? {backgroundColor: '#444444'} : {}}/> : null) : null}
+                </div>
+            </HeaderStyle>
         </Navbar>
+        
         <Sidebar className={isToggleOn ? "visible" : "novisible"}>
             {useIsMobile() && isToggleOn ? ( 
                 <PinnedNotes fullsize={true}></PinnedNotes>
@@ -31,5 +58,4 @@ const Header: FC = () =>
         </>
     )
 }
-
 export default Header

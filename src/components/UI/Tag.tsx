@@ -2,11 +2,11 @@ import React, { FC } from 'react'
 import { TagStyle } from "../../style/TagStyle"
 
 
-const Tag: FC = ({children}) =>
+const Tag: FC<{readonly onClick: Function}> = ({children, onClick}) =>
 {
     return (
         // <div style={{display: "inline-flex"}}>
-            <TagStyle>
+            <TagStyle onClick={(e) => onClick(children)}>
                 {children}
             </TagStyle>
         // </div>

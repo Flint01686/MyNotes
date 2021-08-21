@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 export const CreateNoteStyle = styled.div`
 &{
-    height: calc(100vh - 55.6px);
     textarea{   
         background-color: #c4c4c4;
         height: 90%;
@@ -40,10 +39,18 @@ export const CreateNoteStyle = styled.div`
         }
     }
     form{
-        height: inherit;
+        .head{
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
+            column-gap: 10px;
+            row-gap: 10px;
+            justify-content: center;
+        }
+        /* height: calc(100vh - 55.6px); */
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr 3fr 1fr 1fr 1fr;
+        grid-template-rows: repeat(auto-fill, 70px minmax(271px, 1fr));
         justify-items: stretch;
         margin: 0 auto;
         padding: 40px;
@@ -60,6 +67,49 @@ export const CreateNoteStyle = styled.div`
         h6{
             font-size: 18px;
         }
+
+        .pinner{
+            color: black;
+            background-color: white;
+            border-radius: 5px;
+            width: 70px;
+            height: 30px; 
+        }
+        .active{
+            color: white;
+            background-color: black;
+        }
+        img{
+            object-fit: cover;
+            max-height: 500px;
+            max-width:  500px;
+            &:hover{
+                transition: 700ms;
+                opacity: 0.8;
+            }
+        }
     }   
+}
+@media screen and (max-width: 768px) {
+    form {padding: 7px;}
+    .block_inline
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        row-gap: 10px;
+        h6{
+            height: fit-content;
+        }
+        input[type=file] {
+            width: 70%;
+            font-size: 16px;
+            &:focus-visible
+            {
+                outline: none;
+            }
+        }
+    }
 }
 `

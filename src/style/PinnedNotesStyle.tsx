@@ -7,9 +7,9 @@ export const PinnedNotesStyle = styled.div<PinnedNotesI>`
     display: grid;
     
     grid-row-gap: 20px;
-    padding: 20px 20px;
     position: sticky;
     height: ${props => props.fullsize ? 'auto' : '100vh'};
+    min-height: ${props => props.fullsize ? '92vh' : 'auto'};
     overflow-y: auto;
     justify-content: center;
     top: 0;

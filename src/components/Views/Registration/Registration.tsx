@@ -1,34 +1,75 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
+import { Alert } from 'react-bootstrap'
+import { useHistory } from 'react-router-dom'
+import { InputPanelStyle } from '../../../style/InputPanelStyle'
+import { RegisterI } from '../../Interfaces/Auth'
 import BaseLayout from '../../layouts/BaseLayout'
-import InputPanel from '../../UI/InputPanel'
+import { signUp } from '../../Requests'
+import Submit from '../../UI/Submit'
+import onlyTrueHandler from '../serviceFunctions'
 
 const Registration: FC = () => 
 { 
-    let registrationData = {
-        main: "Registration",
-        inputs: [
-            {
-                main: "Login",
-                type: "text"
-            },
-            {
-                main: "E-mail",
-                type: "email"
-            },
-            {
-                main: "Password",
-                type: "password"
-            },
-            {
-                main: "Confirm password",
-                type: "password"
-            },
-        ]
+    let [login, setLogin] = useState<string>("")
+    let [email, setEmail] = useState<string>("")
+    let [password, setPassword] = useState<string>("")
+    let [passConfirmation, setPassConfirmation] = useState<string>();
+
+    const [problem, setProblem] = useState<string>("")
+
+    const history = useHistory();
+
+    function register(event: React.FormEvent<HTMLFormElement>)
+    {
+        const registerData: RegisterI = {
+            login: login,
+            email: email,
+            password: password,
+        }
+        
+        if (passConfirmation === registerData.password)
+            signUp(registerData).then(() => history.push("/auth")).catch(e => { 
+                setProblem(JSON.stringify(e))
+                setTimeout(() => setProblem(""), 7000)
+            })
+        else{
+            setProblem('Value of field "Password" and field "Confirm password" must match')
+            setTimeout(() => setProblem(""), 7000)
+        }
+
+        event.preventDefault()
     }
 
     return(
         <BaseLayout>
-            <InputPanel marginTop={"5%"} data={registrationData}></InputPanel>
+            {problem === "" ? null : <Alert variant="danger">{problem}</Alert>}
+            <InputPanelStyle marginTop={"5%"}>    
+                <form action="#" onSubmit={(event) => register(event)}>
+                    <h3>Registration</h3>
+                    <div>
+                        <h6>Login</h6>
+                        <input type='text' required
+                            onChange={event => onlyTrueHandler(event, setLogin)} />
+                    </div>
+                    <div>
+                        <h6>E-mail</h6>
+                        <input type='email' required 
+                            onChange={event => onlyTrueHandler(event, setEmail)} />
+                    </div>
+                    <div>
+                        <h6>Password</h6>
+                        <input type='password' required 
+                            onChange={event => onlyTrueHandler(event, setPassword)} />
+                    </div>
+                    <div>
+                        <h6>Confirm password</h6>
+                        <input type='password' required 
+                            onChange={event => setPassConfirmation(event.target.value)} />
+                    </div>
+                    <Submit text="Go" backgroundColor="black" textColor="white"> Go </Submit>
+
+                </form>
+            </InputPanelStyle>
         </BaseLayout>
     )
 }

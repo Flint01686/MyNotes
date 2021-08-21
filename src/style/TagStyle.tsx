@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const TagStyle = styled.div`
+cursor: pointer;
 height: 27px;
 width: auto;
 border-radius: 5px;

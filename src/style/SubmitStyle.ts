@@ -3,6 +3,7 @@ import { SubmitI } from '../components/UI/Submit'
 
 export const SubmitStyle = styled.input.attrs<SubmitI>(props => (
     {
+        onClick: props.onClick,
         type: 'submit',
         value: props.text
     }

@@ -1,52 +1,80 @@
-import React, {FC, useState, useEffect} from 'react'
+import React, {FC, useEffect, useState} from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { setNote } from '../../../store/reducers/allNotesReducer'
 import { AllNotesListStyle } from '../../../style/AllNotesListStyle'
 import { AllNotesStyle } from '../../../style/AllNotesStyle'
+import { SearchStyle } from '../../../style/SearchStyle'
 import { Note } from '../../Interfaces/Note'
+import { getPageNotes, getPageNotesByFilter, getPagesCount } from '../../Requests'
 import NoteCard from '../../UI/NoteCard'
 import Pagenation from '../../UI/Pagenation'
+import { NotesStateI } from './Home'
 
 const AllNotes: FC = () => 
 {
-    const [currentPage, setCurrentPage] = useState<number>(1)
+    const dispatch = useDispatch() 
+    let notesState : unknown = useSelector<Array<Note>>((notes) => notes)
+    
+    const [filter, setFilter] = useState("")
     const [pageCount, setPageCount] = useState<number>(0)
-    const [notes, setNotes] = useState<Array<Note>>([])
-    const [notesOnPageCount, setNotesOnPageCount] = useState<number>(10)
+    const [page, setPage] = useState<number>(0)
+    
+
+    const history = useHistory()
 
     useEffect(() => {          
-
-        // TODO: rewrite for db request
         try
         {
-            let notesArr: Array<Note> = []
-            for (let i:number = 0; i< 15; i++)
-            {
-                notesArr.push({
-                    tags: ["lol", "kek", "zaza", "gagag", "blopblopblop"], 
-                    img:"", 
-                    text: "Yamaayyeeeyaaa whisky kola koroleva tncpola", })
-            }
-            setPageCount(1000)
-            setNotes(notesArr)
+            getPagesCount(filter).then(res =>{
+                console.log(res);
+            })
+            filter === "" ? getPageNotes(page).then(res => {
+                console.log(res.data);
+                dispatch(setNote(res.data))
+            })
+            : getPageNotesByFilter(page, filter).then(res => {
+                console.log("kek", res, ":", filter);
+                dispatch(setNote(res.data))
+            })
         }
         catch (e)
         {
-            console.log(e)      
+            history.push("/note/error/" + JSON.stringify(console.log(e)))     
         }
+    }, [page, filter])
 
-    }, [])
-
-    return (
+    if ((notesState as NotesStateI).notes.length === 0) return (<div style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginTop: "20vh",
+        }}> 
+        <h1>U have no notes, srry, glhf</h1>
+        <a href="/note/create">Create new note</a></div> 
+    )
+    else return (      
         <AllNotesStyle>
             <h2>All notes</h2>
+            <SearchStyle className="search">
+                <input type="text" onChange={(e) => {console.log(e.currentTarget.value); setFilter(e.currentTarget.value)}}/>
+                <input 
+                onClick={(e) => console.log(e.currentTarget)}
+                type="button" 
+                value="Search" />
+            </SearchStyle>
             <AllNotesListStyle>
-                {notes.map((note,index) => <NoteCard 
+                {console.log("kek", (notesState as NotesStateI).notes)}
+                {(notesState as NotesStateI).notes.map((note,index) => <NoteCard 
+                    id={note.id}
                     key={index}
                     text={note.text}
-                    img={note.img}
+                    attachments={note.attachments}
                     tags={note.tags}
+                    isPinned={note.isPinned}
                 ></NoteCard>)}
             </AllNotesListStyle>
-            <Pagenation> {currentPage}|{pageCount} </Pagenation>
+            <Pagenation changePage={setPage}> {page}|{pageCount} </Pagenation>
         </AllNotesStyle>  
     )
 }

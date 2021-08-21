@@ -1,7 +1,8 @@
 export interface Note{
-    readonly img?: string;
+    readonly id?: number;
     readonly tags?: Array<string>;
     readonly text: string;
 
-    readonly attachment?: string;
+    readonly attachments?: Array<string>;
+    readonly isPinned: boolean;
 }

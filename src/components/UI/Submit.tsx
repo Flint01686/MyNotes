@@ -9,16 +9,18 @@ export interface SubmitI
     fontSize?: string; 
     hoverColor?: string;
     hoverBgColor?: string;
+    onClick?: () => void;
 }
 
-const Submit : FC <SubmitI> = ({hoverColor, hoverBgColor, backgroundColor, text, textColor, fontSize}) =>
+const Submit : FC <SubmitI> = ({onClick, hoverColor, hoverBgColor, backgroundColor, text, textColor, fontSize}) =>
 {
     return <SubmitStyle text={text}
      fontSize={fontSize ?? "20px"}
      backgroundColor={backgroundColor ?? '#2c2c2c'}
      textColor={textColor ?? 'white'}
      hoverColor={hoverColor ?? 'white'}
-     hoverBgColor={hoverBgColor ?? 'black'}>
+     hoverBgColor={hoverBgColor ?? 'black'}
+     onClick={onClick}>
     </SubmitStyle>
 }
 

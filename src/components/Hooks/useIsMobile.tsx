@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React, { useState, useEffect } from 'react'
 
 export function useIsMobile()
@@ -10,7 +11,6 @@ export function useIsMobile()
     }
     
     useEffect(() => {
-        
         refreshState()
         window.addEventListener("resize", () =>{ refreshState() });
         return () => {
