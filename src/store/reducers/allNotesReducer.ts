@@ -13,19 +13,37 @@ const ADD_NOTE = 'add';
 const SET_NOTE = 'setNote';
 const UPD_NOTE = 'updNote';
 
-const defaultState: Note[] = [];
+export interface allNotesStateI {
+  notes: Note[];
+}
 
-export function notesReducer(state = defaultState, action: Action): Array<Note> {
+const initState: allNotesStateI = {
+  notes: []
+}
+
+export function notesReducer(state = initState, action: Action): allNotesStateI {
   switch (action.type) {
     case REMOVE_NOTE:
-      return action.ids ? state.filter(
-          ({id}) => id ? !action.ids?.includes(id) : true) : state;
+      return {
+        ...state,
+        notes: action.ids ? state.notes.filter(
+          ({id}) => id ? !action.ids?.includes(id) : true) : state.notes};
     case ADD_NOTE:
-      return action.newNotes ? state.concat(action.newNotes) : state;
+      return {
+        ...state,
+        notes: action.newNotes ? state.notes.concat(action.newNotes) : state.notes}
     case SET_NOTE:
-      return action.newNotes ?? [];
+      console.log("state", {
+        ...state,
+        notes: action.newNotes ?? []});
+      
+      return {
+        ...state,
+        notes: action.newNotes ?? []};
     case UPD_NOTE:
-      return state.map(note => note.id === action.id ? action.note : note);
+      return {
+        ...state,
+        notes: state.notes.map(note => note.id === action.id ? action.note : note)};
     default:
       return state;
   }

@@ -1,6 +1,4 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { addTagRedux, del, set } from '../../store/reducers/tagsReducer';
 import { TagInputStyle } from '../../style/TagInputStyle';
 import { TagListStyle } from '../../style/TagsListStyle';
 import Tag from './Tag'

@@ -1,15 +1,26 @@
-import React, {FC} from "react"
+import React, {FC, useState} from "react"
 import { Button } from "react-bootstrap"
 import { PagenationStyle } from "../../style/PagenationStyle"
 
-const Pagenation: FC<{changePage: Function}> = ({children, changePage}) =>
+const Pagenation: FC<{
+    changePage: Function
+    page: number
+    count: number
+}> = ({children, changePage, page, count}) =>
 {
+    const [currentPage, setCurrentPage] = useState(page)
+    function changeCurrentPage(how: number)
+    {
+        changePage(currentPage+how)
+        setCurrentPage((prev: number) => prev+how)
+    }
     return (
         <PagenationStyle center>
-            <Button style={{visibility: 'hidden', }}
-                onClick={() => changePage((prev: number)=>--prev)}> prev </Button>
+            <Button variant="dark" style={currentPage === 0 ? {visibility: 'hidden', } : {visibility: 'visible', }}
+                onClick={() => changeCurrentPage(-1)}> prev </Button>
             {children}
-            <Button onClick={() => changePage((prev: number)=>++prev)}> next </Button>
+            <Button variant="dark" style={currentPage+1 >= count ? {visibility: 'hidden', } : {visibility: 'visible', }}
+                onClick={() => changeCurrentPage(+1)}> next </Button>
         </PagenationStyle>
     )
 }

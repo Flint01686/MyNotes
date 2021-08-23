@@ -29,20 +29,23 @@ export const notesReq = axios.create({
 });
 
 notesReq.interceptors.request.use(authInterceptor, (e) => {
+  return Promise.reject(e);
+});
+notesReq.interceptors.response.use(res => res, (e) => {
   console.log("lol", Object.entries(e));
   
-  let history = useHistory()
-  if (e.isAxiosError) { history.push("/note/error/fuckConnection"); return; }
+  // if (e.isAxiosError) { history.push("/note/error/fuckConnection"); return; }
   if (e.response.data.statusCode === 401) localStorage.removeItem('accessToken') 
-  else history.push("/note/error/" + JSON.stringify(e.response))
+  return Promise.reject(e);
 });
 
 export const getOneNoteById = (id: number): Promise<AxiosResponse> => notesReq.get(`note/${id}`);
 export const getPageNotes = (page: number): Promise<AxiosResponse> => notesReq.get(`note/page/${page}`);
 export const getPageNotesByFilter = 
   (page: number, filter: string): Promise<AxiosResponse> => notesReq.get(`note/pagef/${page}/${filter}`);
-export const getPagesCount = 
+export const getPagesCountByFilter = 
   (filter: string): Promise<AxiosResponse> => notesReq.get(`note/pagec/${filter}`);
+export const getPagesCount = (): Promise<AxiosResponse> => notesReq.get('note/pagecnt');
 export const getPinnedNotes = (): Promise<AxiosResponse> => notesReq.get(`note/pinned`);
 export const cloneOneNoteById = (id: number): Promise<AxiosResponse> => notesReq.post(`note/${id}`);
 export const addNote = (data: FormData): Promise<AxiosResponse> => notesReq.post('note', data);

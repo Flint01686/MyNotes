@@ -1,43 +1,52 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Card } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { addNoteForStore, removeNote, updNote } from '../../store/reducers/allNotesReducer';
+import { removeNote } from '../../store/reducers/allNotesReducer';
+import { refresh } from '../../store/reducers/refreshReducer';
+import { RootState } from '../../store/reducers/rootReducer';
 import { NodeCardStyle } from '../../style/NoteCardSytle';
 import { Note } from '../Interfaces/Note';
 import { cloneOneNoteById, deleteNote, getOneNoteById } from '../Requests';
+import { NotesStateI } from '../Views/Home/Home';
 import TagInput from './TagInput'
 
-const NoteCard: FC<Note> = ({attachments=[], tags=[], text="", id, ...other}) =>
+const NoteCard: FC<{id: number, note: Note}> = ({id, note}) =>
 {    
+    let notesState : unknown = useSelector<Array<Note>>((notes) => notes)
+    let refresher : unknown = useSelector<RootState>((notes) => notes.refresher)
+
+    const brokenNote: Note = {
+        text: "broken note",
+        isPinned: true
+    }
+
     const history = useHistory();
-    const mainImgSrc = (process.env.REACT_APP_API_URL && attachments[0]) ? (
-        process.env.REACT_APP_API_URL + attachments[0]) : "./default.png"
+    const mainImgSrc = (
+        process.env.REACT_APP_API_URL && 
+        note.attachments && 
+        note.attachments[0]
+        ) ? (
+        process.env.REACT_APP_API_URL + note.attachments[0]) : "./default.png"
     const dispatch = useDispatch() 
 
     function deleteCurrentNote(e: any)
     {
         if (id)
         {
-            deleteNote(id).then((res) => console.log(res)).catch((err) => history.push("/note/error/" + JSON.stringify(err)))
-            dispatch(removeNote([id]))            
+            // dispatch(removeNote([id]))            
+            deleteNote(id)
+                .then(() => { dispatch(refresh()) })
+                .catch((err) => history.push("/note/error/" + JSON.stringify(err)))
         }
         e.stopPropagation()
     }
 
     function cloneCurrentNote(e: any)
     {
-        let currentNote: Note = { 
-            attachments: attachments, 
-            tags: tags, 
-            text: text,
-            ...other}
         if (id)
         {
-            cloneOneNoteById(id).then(res =>
-                dispatch(addNoteForStore([{ 
-                    id: res.data.id,
-                    ...currentNote}])))
+            cloneOneNoteById(id).then(res => dispatch(refresh()))
         }
         // dispatch(addNoteForStore([{ 
         //     attachments: attachments, 
@@ -50,18 +59,19 @@ const NoteCard: FC<Note> = ({attachments=[], tags=[], text="", id, ...other}) =>
 
     return (
         <NodeCardStyle>
+            {console.log("crd", note)}
             <Card className="card" onClick={(e: any) => {
                 history.push(`/note/update/${id}`)
             }}>
-                {attachments === [] ? null : 
+                {note.attachments === [] ? null : 
                     <Card.Img variant="top" src={mainImgSrc}
                         crossOrigin="anonymous"/>  }
                 <Card.Body>
                     <Card.Title>
-                        <TagInput tags={tags} readonly={true}></TagInput>        
+                        <TagInput tags={note.tags ?? []} readonly={true}></TagInput>        
                     </Card.Title>
                     <Card.Text>
-                        {text}
+                        {note.text}
                     </Card.Text>
                     <div className="buttons_panel">
                     <button onClick={(e) => deleteCurrentNote(e)}>Delete</button>

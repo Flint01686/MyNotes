@@ -11,6 +11,7 @@ import { Loader } from '../UI/Loader'
 import { useDispatch } from 'react-redux'
 import { removeNote, updNote } from '../../store/reducers/allNotesReducer'
 import Unauthorized from '../UI/Unauthorized'
+import { refresh } from '../../store/reducers/refreshReducer'
 
 interface PhotosI{
     index: number;
@@ -60,13 +61,23 @@ const CreateNote: FC = () =>
                 // files.filter(file => !localAttachments.includes(process.env.REACT_APP_API_URL+file.name))
             }
             
+            
             if (Number.isNaN(numId)) 
-            addNote(NoteFormData).then(res => history.push('/home')).catch(
+            addNote(NoteFormData)
+                .then(res => { history.push('/home'); 
+                    dispatch(refresh());
+                })
+                .catch(
                 e => {if (e.response.data.statusCode === 401) localStorage.removeItem('accessToken')} )
+                // .finally(() => {dispatch(refresh());})
             else {
-                dispatch(updNote(currentNote, numId))
+                // dispatch(updNote(currentNote, numId))
                 updateNote(numId, NoteFormData)
-                    .then(res => history.push('/home')).catch(err => console.log(err))
+                    .then(res => { history.push('/home'); 
+                        dispatch(refresh());
+                    })
+                    .catch(err => console.log(err))
+                    // .finally(() => {dispatch(refresh());})
             }
         }
         // history.push('/home')
