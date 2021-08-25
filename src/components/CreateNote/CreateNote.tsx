@@ -9,7 +9,6 @@ import { useHistory, useParams } from 'react-router-dom'
 import { Note } from '../Interfaces/Note'
 import { Loader } from '../UI/Loader'
 import { useDispatch } from 'react-redux'
-import { removeNote, updNote } from '../../store/reducers/allNotesReducer'
 import Unauthorized from '../UI/Unauthorized'
 import { refresh } from '../../store/reducers/refreshReducer'
 
@@ -58,7 +57,6 @@ const CreateNote: FC = () =>
                 NoteFormData.append("localAttachments", JSON.stringify(
                     localAttachments?.filter(attach =>
                         currentNote.attachments?.includes(process.env.REACT_APP_API_URL+attach))))
-                // files.filter(file => !localAttachments.includes(process.env.REACT_APP_API_URL+file.name))
             }
             
             
@@ -69,18 +67,14 @@ const CreateNote: FC = () =>
                 })
                 .catch(
                 e => {if (e.response.data.statusCode === 401) localStorage.removeItem('accessToken')} )
-                // .finally(() => {dispatch(refresh());})
             else {
-                // dispatch(updNote(currentNote, numId))
                 updateNote(numId, NoteFormData)
                     .then(res => { history.push('/home'); 
                         dispatch(refresh());
                     })
                     .catch(err => console.log(err))
-                    // .finally(() => {dispatch(refresh());})
             }
         }
-        // history.push('/home')
         event.preventDefault()
     }
 

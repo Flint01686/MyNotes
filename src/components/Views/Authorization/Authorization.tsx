@@ -35,8 +35,6 @@ const Authorization: FC = () =>
         event.preventDefault()
     }
 
-    console.log(history);
-
     return(
         <BaseLayout>
             {problem === "" ? null : <Alert variant="danger">{problem}</Alert>}

@@ -2,42 +2,51 @@ import React, { FC, useEffect, useState } from 'react'
 import { Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { removeNote } from '../../store/reducers/allNotesReducer';
+import { allNotesStateI } from '../../store/reducers/allNotesReducer';
+import { pinNotesStateI } from '../../store/reducers/pinnedNotes';
 import { refresh } from '../../store/reducers/refreshReducer';
 import { RootState } from '../../store/reducers/rootReducer';
 import { NodeCardStyle } from '../../style/NoteCardSytle';
 import { Note } from '../Interfaces/Note';
-import { cloneOneNoteById, deleteNote, getOneNoteById } from '../Requests';
-import { NotesStateI } from '../Views/Home/Home';
+import { cloneOneNoteById, deleteNote } from '../Requests';
 import TagInput from './TagInput'
 
-const NoteCard: FC<{id: number, note: Note}> = ({id, note}) =>
+const NoteCard: FC<{id: number}> = ({id}) =>
 {    
-    let notesState : unknown = useSelector<Array<Note>>((notes) => notes)
-    let refresher : unknown = useSelector<RootState>((notes) => notes.refresher)
-
+    let notesState : allNotesStateI = useSelector((notes: RootState) => notes.notes)
+    let pinnedNotesState : pinNotesStateI = useSelector((notes: RootState) => notes.pinnedNotes)
+    
     const brokenNote: Note = {
         text: "broken note",
         isPinned: true
     }
+    
+    const [currentNote, setCurrentNote] = useState<Note>(brokenNote)
+
+    useEffect(() => {
+        setCurrentNote(notesState.notes.find(note => note.id === id)
+        ?? pinnedNotesState.pinnedNotes.find(note => note.id === id)
+        ?? brokenNote)
+    }, [notesState])
 
     const history = useHistory();
     const mainImgSrc = (
         process.env.REACT_APP_API_URL && 
-        note.attachments && 
-        note.attachments[0]
+        currentNote.attachments && 
+        currentNote.attachments[0]
         ) ? (
-        process.env.REACT_APP_API_URL + note.attachments[0]) : "./default.png"
+        process.env.REACT_APP_API_URL + currentNote.attachments[0]) : "./default.png"
     const dispatch = useDispatch() 
 
     function deleteCurrentNote(e: any)
     {
         if (id)
         {
-            // dispatch(removeNote([id]))            
-            deleteNote(id)
-                .then(() => { dispatch(refresh()) })
-                .catch((err) => history.push("/note/error/" + JSON.stringify(err)))
+            deleteNote(id).then((res) => {                
+                dispatch(refresh());
+                // dispatch(removeNote([id]));            
+            })
+            .catch((err) => history.push("/note/error/" + JSON.stringify(err)))
         }
         e.stopPropagation()
     }
@@ -59,19 +68,18 @@ const NoteCard: FC<{id: number, note: Note}> = ({id, note}) =>
 
     return (
         <NodeCardStyle>
-            {console.log("crd", note)}
             <Card className="card" onClick={(e: any) => {
                 history.push(`/note/update/${id}`)
             }}>
-                {note.attachments === [] ? null : 
+                {currentNote.attachments === [] ? null : 
                     <Card.Img variant="top" src={mainImgSrc}
                         crossOrigin="anonymous"/>  }
                 <Card.Body>
                     <Card.Title>
-                        <TagInput tags={note.tags ?? []} readonly={true}></TagInput>        
+                        <TagInput id={currentNote.id} readonly={true}></TagInput>        
                     </Card.Title>
                     <Card.Text>
-                        {note.text}
+                        {currentNote.text}
                     </Card.Text>
                     <div className="buttons_panel">
                     <button onClick={(e) => deleteCurrentNote(e)}>Delete</button>

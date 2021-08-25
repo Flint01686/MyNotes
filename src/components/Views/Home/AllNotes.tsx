@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react'
+import React, {FC, useEffect, useRef, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { allNotesStateI, setNote } from '../../../store/reducers/allNotesReducer'
@@ -6,12 +6,10 @@ import { RootState } from '../../../store/reducers/rootReducer'
 import { AllNotesListStyle } from '../../../style/AllNotesListStyle'
 import { AllNotesStyle } from '../../../style/AllNotesStyle'
 import { SearchStyle } from '../../../style/SearchStyle'
-import { Note } from '../../Interfaces/Note'
 import { getPageNotes, getPageNotesByFilter, getPagesCount, getPagesCountByFilter } from '../../Requests'
 import { Loader } from '../../UI/Loader'
 import NoteCard from '../../UI/NoteCard'
 import Pagenation from '../../UI/Pagenation'
-import { NotesStateI } from './Home'
 
 const noteOnPageCount = 9;
 
@@ -25,41 +23,32 @@ const AllNotes: FC = () =>
     const dispatch = useDispatch() 
     let refresher : unknown = useSelector<RootState>((notes) => notes.refresher)
     let notesState : unknown = useSelector<RootState>((notes) => notes.notes, arr)
+    const filterRef = useRef<HTMLInputElement>(null)
     
     const [filter, setFilter] = useState("")
     const [pageCount, setPageCount] = useState<number>(0)
     const [page, setPage] = useState<number>(0)
-    const [currentNotes, setCurrentNotes] = useState<Array<Note>>([])
     const [refreshState, setRefreshState] = useState(false)
 
     const history = useHistory()
 
     useEffect(() => {          
         try
-        {
-            console.log("roll");
-            
+        {            
             if(filter === "") {
                 setRefreshState(true)
-                getPagesCount().then(res =>{
+                getPagesCount().then(res =>{                    
                     setPageCount(Math.ceil(res.data / noteOnPageCount))
                 })
                 getPageNotes(page).then(res => {
-                    setRefreshState(false)
-                    setCurrentNotes(res.data)
-                    // dispatch(setNote(res.data))
-                    // console.log("outsude", res.data, "|", notesState);
-                    
+                    dispatch(setNote(res.data))        
                 })
             } else {
                 getPagesCountByFilter(filter).then(res =>{
                     setPageCount(Math.round(res.data / noteOnPageCount))
                 }) 
                 getPageNotesByFilter(page, filter).then(res => {
-                    setRefreshState(false)
-                    setCurrentNotes(res.data)
-                    // dispatch(setNote(res.data))
-                    // console.log(notesState);
+                    dispatch(setNote(res.data))
                 })
             }    
         }
@@ -69,15 +58,13 @@ const AllNotes: FC = () =>
         }
     }, [page, refresher, filter])
 
-    // useEffect(() => {
-    //     setCurrentNotes([])
-    //     console.log("inside", (notesState as allNotesStateI).notes)
-    //     setRefreshState(false)
+    useEffect(() => {
+        setRefreshState(false)
         
-    // }, [notesState])
+    }, [notesState])
 
     if (refreshState) return (<Loader></Loader>)
-    else if (currentNotes.length === 0 && filter=== "") return (<div style={{
+    else if ((notesState as allNotesStateI).notes.length === 0 && filter=== "") return (<div style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -90,17 +77,20 @@ const AllNotes: FC = () =>
         <AllNotesStyle>
             <h2>All notes</h2>
             <SearchStyle className="search">
-                <input type="text" onChange={(e) => {console.log(e.currentTarget.value); setFilter(e.currentTarget.value)}}/>
+                <input type="text" ref={filterRef} onKeyUp={(e) => {
+                    if(e.key === 'Enter') {
+                        setFilter(filterRef.current?.value ?? "")
+                    }
+                }}/>
                 <input 
-                onClick={(e) => console.log(e.currentTarget)}
+                onClick={(e) => setFilter(filterRef.current?.value ?? "")}
                 type="button" 
                 value="Search" />
             </SearchStyle>
             <AllNotesListStyle>
-                {console.log("inner", currentNotes)}
-                {currentNotes.map((note,index) => <NoteCard
+                {(notesState as allNotesStateI).notes.map((note,index) => <NoteCard
                     key={index} 
-                    note={note}
+                    // note={note}
                     id={note.id ?? NaN}
                 ></NoteCard>)}
             </AllNotesListStyle>

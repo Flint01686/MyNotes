@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { pinNotesStateI, setPinNote } from '../../../store/reducers/pinnedNotes';
 import { RootState } from '../../../store/reducers/rootReducer';
 import { PinnedNotesStyle } from '../../../style/PinnedNotesStyle'
 import { Note } from '../../Interfaces/Note';
@@ -15,15 +16,19 @@ export interface PinnedNotesI
 const PinnedNotes: FC<PinnedNotesI>  = ({ fullsize=false}) => 
 {
     let refresher : unknown = useSelector<RootState>((notes) => notes.refresher)
+    let pinnedNotesState : pinNotesStateI = useSelector((notes: RootState) => notes.pinnedNotes)
     const [refreshState, setRefreshState] = useState(false)
+    const dispatch = useDispatch() 
 
     let [AllPinnedNotes, setAllPinnedNotes] = useState<Array<Note>>([])
     
     useEffect(() => {     
         setRefreshState(true)         
-        console.log("llor");
         
-        getPinnedNotes().then((res) => { setRefreshState(false); setAllPinnedNotes(res.data); })
+        
+        getPinnedNotes().then((res) => { 
+            setRefreshState(false); 
+            dispatch(setPinNote(res.data)); setAllPinnedNotes(res.data); })
         
     }, [refresher])
     // if (refreshState) return(<Loader theme="dark"></Loader>)
@@ -31,10 +36,11 @@ const PinnedNotes: FC<PinnedNotesI>  = ({ fullsize=false}) =>
         <div>
             <PinnedNotesStyle fullsize={fullsize}>
                 <h3>Pinned notes</h3>
-                {AllPinnedNotes.map((note, index) => <NoteCard 
+                {pinnedNotesState.pinnedNotes.map((note, index) => <NoteCard 
                     key={index} 
-                    note={note}
-                    id={note.id ?? NaN}></NoteCard>)}
+                    // note={note}
+                    id={note.id ?? NaN}
+                    ></NoteCard>)}
             </PinnedNotesStyle>
         </div>      
     )

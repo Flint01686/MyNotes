@@ -33,10 +33,6 @@ export function notesReducer(state = initState, action: Action): allNotesStateI 
         ...state,
         notes: action.newNotes ? state.notes.concat(action.newNotes) : state.notes}
     case SET_NOTE:
-      console.log("state", {
-        ...state,
-        notes: action.newNotes ?? []});
-      
       return {
         ...state,
         notes: action.newNotes ?? []};

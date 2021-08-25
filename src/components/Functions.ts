@@ -14,10 +14,8 @@ export function RefreshNotesState(filter = "", page = 0){
                 dispatch(setNote(res.data))
             })
             : getPageNotesByFilter(page, filter).then(res => {
-                console.log("kek", res, ":", filter);
                 dispatch(setNote(res.data))
             })
-            console.log();
         }
         catch (e)
         {
