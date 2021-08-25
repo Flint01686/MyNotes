@@ -62,14 +62,14 @@ const CreateNote: FC = () =>
             
             if (Number.isNaN(numId)) 
             addNote(NoteFormData)
-                .then(res => { history.push('/home'); 
+                .then(res => { history.push('/'); 
                     dispatch(refresh());
                 })
                 .catch(
                 e => {if (e.response.data.statusCode === 401) localStorage.removeItem('accessToken')} )
             else {
                 updateNote(numId, NoteFormData)
-                    .then(res => { history.push('/home'); 
+                    .then(res => { history.push('/'); 
                         dispatch(refresh());
                     })
                     .catch(err => console.log(err))

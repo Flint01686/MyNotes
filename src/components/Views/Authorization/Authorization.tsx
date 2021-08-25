@@ -24,7 +24,7 @@ const Authorization: FC = () =>
         }
         signIn(authData).then((response) => {
             localStorage.setItem('accessToken', response.data.accessToken);
-            history.push('/home');
+            history.push('/');
           }).catch(e => { 
                 if (e.response && e.response.data && e.response.data.statusCode === 401) {
                     setProblem("Wrong login or password")
