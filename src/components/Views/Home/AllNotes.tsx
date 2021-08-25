@@ -54,7 +54,7 @@ const AllNotes: FC = () =>
         }
         catch (e)
         {
-            history.push("/note/error/" + JSON.stringify(console.log(e)))     
+            alert(e)     
         }
     }, [page, refresher, filter])
 

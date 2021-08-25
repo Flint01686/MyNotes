@@ -46,7 +46,7 @@ const NoteCard: FC<{id: number}> = ({id}) =>
                 dispatch(refresh());
                 // dispatch(removeNote([id]));            
             })
-            .catch((err) => history.push("/note/error/" + JSON.stringify(err)))
+            .catch((err) => alert(err))
         }
         e.stopPropagation()
     }

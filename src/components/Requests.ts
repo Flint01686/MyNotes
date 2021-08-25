@@ -32,14 +32,11 @@ notesReq.interceptors.request.use(authInterceptor, (e) => {
 });
 notesReq.interceptors.response.use(res => res, (e) => {  
   // console.log("err", e);
-  const errorer = (e: any) =>{
-    window.location.replace(`/note/error/${JSON.stringify(e)}`);
-  }
   
-  if (e.response === undefined) { errorer(e); return; }
+  if (e.response === undefined) { alert(e); return; }
   else
   if (e.response.data.statusCode === 401) localStorage.removeItem('accessToken') 
-  else { errorer(e); return; }
+  else { alert(e); return; }
   return Promise.reject(e);
 });
 

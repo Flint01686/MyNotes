@@ -19,7 +19,7 @@ export function RefreshNotesState(filter = "", page = 0){
         }
         catch (e)
         {
-            history.push("/note/error/" + JSON.stringify(console.log(e)))     
+            alert(e)    
         }
 
 }
