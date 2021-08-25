@@ -33,10 +33,9 @@ notesReq.interceptors.request.use(authInterceptor, (e) => {
 notesReq.interceptors.response.use(res => res, (e) => {  
   // console.log("err", e);
   
-  if (e.response === undefined) { alert(e); return; }
-  else
-  if (e.response.data.statusCode === 401) localStorage.removeItem('accessToken') 
-  else { alert(e); return; }
+  alert(e)
+  localStorage.removeItem('accessToken')
+  
   return Promise.reject(e);
 });
 
