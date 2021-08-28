@@ -42,13 +42,16 @@ const AllNotes: FC = () =>
                 })
                 getPageNotes(page).then(res => {
                     dispatch(setNote(res.data))        
+                    setRefreshState(false)
                 })
             } else {
+                setRefreshState(true)
                 getPagesCountByFilter(filter).then(res =>{
                     setPageCount(Math.round(res.data / noteOnPageCount))
                 }) 
                 getPageNotesByFilter(page, filter).then(res => {
                     dispatch(setNote(res.data))
+                    setRefreshState(false)
                 })
             }    
         }
@@ -57,11 +60,6 @@ const AllNotes: FC = () =>
             alert(e)     
         }
     }, [page, refresher, filter])
-
-    useEffect(() => {
-        setRefreshState(false)
-        
-    }, [notesState])
 
     if (refreshState) return (<Loader></Loader>)
     else if ((notesState as allNotesStateI).notes.length === 0 && filter=== "") return (<div style={{
@@ -77,7 +75,10 @@ const AllNotes: FC = () =>
         <AllNotesStyle>
             <h2>All notes</h2>
             <SearchStyle className="search">
-                <input type="text" ref={filterRef} onKeyUp={(e) => {
+                <input type="text"
+                    ref={filterRef} 
+                    defaultValue={filter}
+                    onKeyUp={(e) => {
                     if(e.key === 'Enter') {
                         setFilter(filterRef.current?.value ?? "")
                     }

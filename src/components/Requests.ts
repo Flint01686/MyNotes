@@ -35,6 +35,7 @@ notesReq.interceptors.response.use(res => res, (e) => {
   
   alert(e)
   localStorage.removeItem('accessToken')
+  window.location.href = 'auth';
   
   return Promise.reject(e);
 });
