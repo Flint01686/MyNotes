@@ -31,7 +31,7 @@ const CreateNote: FC = () =>
             ...res.data,
             attachments: res.data.attachments.map((attach: string) =>{
                 setLocalAttachments(prev => prev.concat([attach]))
-                return process.env.REACT_APP_API_URL+attach})
+                return `https://noteimg.s3.amazonaws.com/${attach}`})
         }))
         else setCurrentNote({
             isPinned: false,
@@ -56,13 +56,17 @@ const CreateNote: FC = () =>
             if (localAttachments !== []) {
                 NoteFormData.append("localAttachments", JSON.stringify(
                     localAttachments?.filter(attach =>
-                        currentNote.attachments?.includes(process.env.REACT_APP_API_URL+attach))))
+                        currentNote.attachments?.includes(
+                            `https://noteimg.s3.amazonaws.com/${attach}`))))
             }
             
             
+            console.log(currentNote, NoteFormData.entries);
             if (Number.isNaN(numId)) 
             addNote(NoteFormData)
-                .then(res => { history.push('/'); 
+                .then(res => { 
+                    
+                    history.push('/'); 
                     dispatch(refresh());
                 })
                 .catch(

@@ -31,11 +31,12 @@ const NoteCard: FC<{id: number}> = ({id}) =>
 
     const history = useHistory();
     const mainImgSrc = (
-        process.env.REACT_APP_API_URL && 
+        // process.env.S3_BUCKET_NAME && 
         currentNote.attachments && 
         currentNote.attachments[0]
         ) ? (
-        process.env.REACT_APP_API_URL + currentNote.attachments[0]) : "./default.png"
+        `https://noteimg.s3.amazonaws.com/${currentNote.attachments[0]}`)
+        : "./default.png"
     const dispatch = useDispatch() 
 
     function deleteCurrentNote(e: any)
@@ -72,8 +73,7 @@ const NoteCard: FC<{id: number}> = ({id}) =>
                 history.push(`/note/update/${id}`)
             }}>
                 {currentNote.attachments === [] ? null : 
-                    <Card.Img variant="top" src={mainImgSrc}
-                        crossOrigin="anonymous"/>  }
+                    <Card.Img variant="top" src={mainImgSrc}/>  }
                 <Card.Body>
                     <Card.Title>
                         <TagInput id={currentNote.id} readonly={true}></TagInput>        
