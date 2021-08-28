@@ -34,7 +34,7 @@ notesReq.interceptors.response.use(res => res, (e) => {
   // console.log("err", e);
   
   alert(e)
-  // localStorage.removeItem('accessToken')
+  localStorage.removeItem('accessToken')
   
   return Promise.reject(e);
 });
