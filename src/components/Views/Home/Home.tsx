@@ -25,7 +25,8 @@ const Home: FC = () => {
             <HomeStyle>
                 {isMobile ? null : 
                     <PinnedNotes></PinnedNotes>}
-                {!(isMobile && isToggleOn) ? <AllNotes></AllNotes> : null}
+                {!(isMobile && isToggleOn) ? 
+                    <AllNotes></AllNotes> : null}
             </HomeStyle>
         </BaseLayout>
     ) 

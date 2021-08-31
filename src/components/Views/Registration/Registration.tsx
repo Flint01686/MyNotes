@@ -28,8 +28,13 @@ const Registration: FC = () =>
         }
         
         if (passConfirmation === registerData.password)
-            signUp(registerData).then(() => history.push("/auth")).catch(e => { 
-                setProblem(JSON.stringify(e))
+            signUp(registerData).then((res) => {
+                console.log(res);
+                
+                if (!res.data.success) throw res; 
+                history.push("/auth")
+            }).catch(e => { 
+                setProblem("User with this e-mail or login already exist.")
                 setTimeout(() => setProblem(""), 7000)
             })
         else{

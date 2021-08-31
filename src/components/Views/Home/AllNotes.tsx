@@ -1,6 +1,6 @@
 import React, {FC, useEffect, useRef, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { allNotesStateI, setNote } from '../../../store/reducers/allNotesReducer'
 import { RootState } from '../../../store/reducers/rootReducer'
 import { AllNotesListStyle } from '../../../style/AllNotesListStyle'
@@ -13,43 +13,51 @@ import Pagenation from '../../UI/Pagenation'
 
 const noteOnPageCount = 9;
 
-function arr( a : unknown, b : unknown)
-{
-    return false
-}
-
 const AllNotes: FC = () => 
 {
     const dispatch = useDispatch() 
     let refresher : unknown = useSelector<RootState>((notes) => notes.refresher)
-    let notesState : unknown = useSelector<RootState>((notes) => notes.notes, arr)
+    let notesState : unknown = useSelector<RootState>((notes) => notes.notes)
     const filterRef = useRef<HTMLInputElement>(null)
     
     const [filter, setFilter] = useState("")
     const [pageCount, setPageCount] = useState<number>(0)
-    const [page, setPage] = useState<number>(0)
+    let { page } = useParams<{page: string}>();
     const [refreshState, setRefreshState] = useState(false)
 
-    const history = useHistory()
+    let history = useHistory()
 
-    useEffect(() => {          
+    const currPage = () => page ? parseInt(page) : 0
+    const pageValidate = (pageBuf: number, count: number) => {
+        if (pageBuf >= count) history.push('/home'); }
+
+    useEffect(() => {   
+        if (currPage() < 0) {
+            alert("не шути со мной");
+            history.push('/home');
+            return;
+        }
         try
         {            
             if(filter === "") {
                 setRefreshState(true)
-                getPagesCount().then(res =>{                    
-                    setPageCount(Math.ceil(res.data / noteOnPageCount))
+                getPagesCount().then(res => {
+                    const countBuf = Math.ceil(res.data / noteOnPageCount);           
+                    pageValidate(currPage(), countBuf)
+                    setPageCount(countBuf)
                 })
-                getPageNotes(page).then(res => {
+                getPageNotes(currPage()).then(res => {
                     dispatch(setNote(res.data))        
                     setRefreshState(false)
                 })
             } else {
                 setRefreshState(true)
-                getPagesCountByFilter(filter).then(res =>{
-                    setPageCount(Math.round(res.data / noteOnPageCount))
+                getPagesCountByFilter(filter).then(res => {
+                    const countBuf = Math.ceil(res.data / noteOnPageCount);           
+                    pageValidate(currPage(), countBuf)
+                    setPageCount(countBuf)
                 }) 
-                getPageNotesByFilter(page, filter).then(res => {
+                getPageNotesByFilter(currPage(), filter).then(res => {
                     dispatch(setNote(res.data))
                     setRefreshState(false)
                 })
@@ -95,7 +103,7 @@ const AllNotes: FC = () =>
                     id={note.id ?? NaN}
                 ></NoteCard>)}
             </AllNotesListStyle>
-            <Pagenation page={page} count={pageCount} changePage={setPage}> {page+1}|{pageCount} </Pagenation>
+            <Pagenation page={currPage()} count={pageCount}> {currPage()+1}|{pageCount} </Pagenation>
         </AllNotesStyle>  
     )
 }

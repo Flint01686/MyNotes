@@ -24,6 +24,7 @@ const CreateNote: FC = () =>
     const [currentNote, setCurrentNote] = useState<Note | null>(null)
     const [localAttachments, setLocalAttachments] = useState<Array<string>>([])
     const history = useHistory()
+    const [refreshState, setRefreshState] = useState<boolean>(false)
 
     useEffect(() => {
         if (!Number.isNaN(numId))
@@ -48,6 +49,8 @@ const CreateNote: FC = () =>
     {      
         if (currentNote)
         {
+            setRefreshState(true)
+
             const NoteFormData = new FormData()
             NoteFormData.append("text", currentNote?.text)
             NoteFormData.append("isPinned", currentNote?.isPinned.toString())
@@ -65,7 +68,7 @@ const CreateNote: FC = () =>
             if (Number.isNaN(numId)) 
             addNote(NoteFormData)
                 .then(res => { 
-                    
+                    setRefreshState(false)
                     history.push('/'); 
                     dispatch(refresh());
                 })
@@ -73,7 +76,9 @@ const CreateNote: FC = () =>
                 e => {if (e.response.data.statusCode === 401) localStorage.removeItem('accessToken')} )
             else {
                 updateNote(numId, NoteFormData)
-                    .then(res => { history.push('/'); 
+                    .then(res => { 
+                        setRefreshState(false)
+                        history.push('/'); 
                         dispatch(refresh());
                     })
                     .catch(err => console.log(err))
@@ -101,11 +106,16 @@ const CreateNote: FC = () =>
     function deleteFile(e: React.MouseEvent<Element, MouseEvent>, photos : PhotosI)
     {
         if (currentNote)
+        {
+            setFiles(prev =>  
+                prev?.filter((item, index) => 
+                index !== photos.index) )
             setCurrentNote({
                 ...currentNote,
                 attachments: currentNote?.attachments?.filter((item, index) => 
-                    index !== photos.index) ?? []
+                index !== photos.index) ?? []
             })
+        }
     }
 
     function changeText(e: React.ChangeEvent<HTMLTextAreaElement>)
@@ -122,7 +132,7 @@ const CreateNote: FC = () =>
             })
         return false;
     }
-    
+    if (refreshState) return <Loader></Loader>
     if (localStorage.getItem("accessToken"))
     return (
         <BaseLayout>

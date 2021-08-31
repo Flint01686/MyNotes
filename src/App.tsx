@@ -16,7 +16,7 @@ interface Page{
 function App() {
   let pages: Array<Page> = [
     {
-      path: "/(home|)",
+      path: "/(home|)/:page?",
       name: "Home",
       src: <Home />
     },
