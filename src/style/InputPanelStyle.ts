@@ -18,6 +18,16 @@ export const InputPanelStyle = styled.div<InputPanelStyleI>`
         row-gap: 20px;
         background-color: rgba(	196, 196, 196, 0.5);
 
+        a{
+            justify-self: right;
+            cursor: pointer;
+            font-size: 14px;
+            color: inherit;
+            &:hover{
+                color: blue !important;
+            }
+        }
+
         h3, h6{
             margin: 0;
         }

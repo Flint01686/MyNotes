@@ -50,6 +50,7 @@ const Authorization: FC = () =>
                         <h6>Password</h6>
                         <input type='password' required 
                             onChange={event => onlyTrueHandler(event, setPassword)} />
+                        <a href="/forgotpassword">Forgot password?</a>
                     </div>
                     <Submit text="Go" backgroundColor="black" textColor="white"> Go </Submit>
 

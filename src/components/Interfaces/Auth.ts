@@ -14,3 +14,16 @@ export interface CreateNoteI {
   files?: Array<File>
   text: string
 }
+
+export interface ResetPasswordI {
+  email: string
+  password: string
+}
+
+export interface SendEmailI {
+  email: string
+}
+
+export interface GetAccessI {
+  token: string
+}

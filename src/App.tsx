@@ -6,6 +6,8 @@ import Registration from './components/Views/Registration/Registration';
 import CreateNote from './components/CreateNote/CreateNote';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import ErrorMessage from './components/UI/ErrorMessage';
+import ForgotPassword from './components/Views/ForgotPassword/ForgotPassword';
+import ResetPassword from './components/Views/ForgotPassword/ResetPassword';
 
 interface Page{
   path: string;
@@ -44,6 +46,16 @@ function App() {
       path: "/note/error/:message",
       name: "Error",
       src: <ErrorMessage></ErrorMessage>
+    },
+    {
+      path: "/forgotpassword",
+      name: "Forgot password",
+      src: <ForgotPassword></ForgotPassword>
+    },
+    {
+      path: "/resetpassword/:token",
+      name: "Reset password",
+      src: <ResetPassword></ResetPassword>
     },
   ]
   return (

@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { LoginI, RegisterI } from './Interfaces/Auth';
+import { GetAccessI, LoginI, RegisterI, ResetPasswordI, SendEmailI } from './Interfaces/Auth';
 
 //Auth
 const authInterceptor = (config: AxiosRequestConfig): AxiosRequestConfig => {
@@ -20,6 +20,10 @@ authReq.interceptors.request.use(authInterceptor, (error) => {
 
 export const signIn = (data: LoginI): Promise<AxiosResponse> => authReq.post('auth/login', data);
 export const signUp = (data: RegisterI): Promise<AxiosResponse> => authReq.post('auth/register', data);
+export const resetPassword = (data: ResetPasswordI): Promise<AxiosResponse> => authReq.post('auth/resetpassword', data);
+export const sendEmail = (data: SendEmailI): Promise<AxiosResponse> => authReq.post('auth/sendmail', data);
+export const getAccessByToken= (data: GetAccessI): Promise<AxiosResponse> => 
+  authReq.post('auth/giveaccesstoreset', data);
 
 //Notes
 export const notesReq = axios.create({

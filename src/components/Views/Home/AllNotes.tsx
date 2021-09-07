@@ -87,10 +87,11 @@ const AllNotes: FC = () =>
                     ref={filterRef} 
                     defaultValue={filter}
                     onKeyUp={(e) => {
-                    if(e.key === 'Enter') {
-                        setFilter(filterRef.current?.value ?? "")
+                        if(e.key === 'Enter') {
+                            setFilter(filterRef.current?.value ?? "")
+                        }
                     }
-                }}/>
+                }/>
                 <input 
                 onClick={(e) => setFilter(filterRef.current?.value ?? "")}
                 type="button" 
