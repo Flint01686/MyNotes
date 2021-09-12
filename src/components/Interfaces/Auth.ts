@@ -16,7 +16,7 @@ export interface CreateNoteI {
 }
 
 export interface ResetPasswordI {
-  email: string
+  token: string
   password: string
 }
 

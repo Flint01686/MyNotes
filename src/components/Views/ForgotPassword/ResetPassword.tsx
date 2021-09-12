@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Alert } from 'react-bootstrap'
 import { useHistory, useParams } from 'react-router-dom'
 import { InputPanelStyle } from '../../../style/InputPanelStyle'
@@ -16,14 +16,14 @@ const ResetPassword: FC = () =>
     const [problem, setProblem] = useState<string>("")
     const [refreshState, setRefreshState] = useState(true)
     const [access, setAccess] = useState(false)
-    const [email, setEmail] = useState(null)
 
     const history = useHistory();
 
     let { token } = useParams<{token: string}>();
 
-    if (!access)
-        getAccessByToken({ token }).then(res => {
+    useEffect(() => {
+        if (!access)
+        getAccessByToken({ token }).then(res => {            
             if (!res.data) throw(new Error())
             setRefreshState(false)
             setAccess(true)
@@ -31,24 +31,26 @@ const ResetPassword: FC = () =>
             setRefreshState(false)
             setAccess(false)
         })
+    }, [])
+    
 
     function resetPass(event: React.FormEvent<HTMLFormElement>)
-    {
+    {        
+        console.log(token, access, "&&&");
+        
         if (password !== confirm) {
             setProblem("Password and password confirmation fields value must match")
         } 
         else
-            if (email && access){
+            if (token && access){
                 const resetData: ResetPasswordI = {
-                    email: email ?? '',
+                    token: token ?? '',
                     password: password,
                 }
                 resetPassword(resetData).then(() => {
                     history.push('/auth');
                 })
-        
             }
-        
         event.preventDefault()
     }
     
@@ -70,7 +72,7 @@ const ResetPassword: FC = () =>
                         <input type='password' required 
                             onChange={event => onlyTrueHandler(event, setConfirm)} />
                     </div>
-                    <Submit text="Go" backgroundColor="black" textColor="white"> Go </Submit>
+                    <Submit text="Reset" backgroundColor="black" textColor="white"></Submit>
 
                 </form>
             </InputPanelStyle>

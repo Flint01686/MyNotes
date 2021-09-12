@@ -32,6 +32,25 @@ button{
         transition: 700ms;
     }
 }
+p{
+    max-height: 120px;
+    overflow-y: auto; 
+}
+p::-webkit-scrollbar {
+    width: 10px;
+}
+p::-webkit-scrollbar-track {
+    border-radius: 5px;
+    background-color: darkgrey;
+}
+p::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #303030;
+}
+p::-webkit-scrollbar-thumb:hover {
+    border-radius: 5px;
+    background-color: black;
+}
 .clone:hover{
     background-color: green;
 }

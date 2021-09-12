@@ -78,9 +78,12 @@ const NoteCard: FC<{id: number}> = ({id}) =>
                     <Card.Title>
                         <TagInput id={currentNote.id} readonly={true}></TagInput>        
                     </Card.Title>
-                    <Card.Text>
+                    {/* <Card.Text>
                         {currentNote.text}
-                    </Card.Text>
+                    </Card.Text> */}
+                    <p>
+                        {currentNote.text}
+                    </p>
                     <div className="buttons_panel">
                     <button onClick={(e) => deleteCurrentNote(e)}>Delete</button>
                     <button className="clone" onClick={(e) => cloneCurrentNote(e)}>Clone</button>
