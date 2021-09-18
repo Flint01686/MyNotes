@@ -8,7 +8,7 @@ import { refresh } from '../../store/reducers/refreshReducer';
 import { RootState } from '../../store/reducers/rootReducer';
 import { NodeCardStyle } from '../../style/NoteCardSytle';
 import { Note } from '../Interfaces/Note';
-import { cloneOneNoteById, deleteNote } from '../Requests';
+import { cloneOneNoteById, deleteNote, RefreshByWS } from '../Requests';
 import TagInput from './TagInput'
 
 const NoteCard: FC<{id: number}> = ({id}) =>
@@ -44,7 +44,7 @@ const NoteCard: FC<{id: number}> = ({id}) =>
         if (id)
         {
             deleteNote(id).then((res) => {                
-                dispatch(refresh());
+                RefreshByWS();
                 // dispatch(removeNote([id]));            
             })
             .catch((err) => alert(err))
@@ -56,7 +56,7 @@ const NoteCard: FC<{id: number}> = ({id}) =>
     {
         if (id)
         {
-            cloneOneNoteById(id).then(res => dispatch(refresh()))
+            cloneOneNoteById(id).then(res => RefreshByWS())
         }
         // dispatch(addNoteForStore([{ 
         //     attachments: attachments, 

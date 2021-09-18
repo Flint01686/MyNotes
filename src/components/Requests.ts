@@ -1,4 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { io } from 'socket.io-client';
+import { store } from '../store';
+import { refresh } from '../store/reducers/refreshReducer';
 import { GetAccessI, LoginI, RegisterI, ResetPasswordI, SendEmailI } from './Interfaces/Auth';
 
 //Auth
@@ -57,3 +60,22 @@ export const addNote = (data: FormData): Promise<AxiosResponse> => notesReq.post
 export const updateNote = (id: number, data: FormData): Promise<AxiosResponse> =>
   notesReq.put(`note/${id}`, data);
 export const deleteNote = (id: number): Promise<AxiosResponse> => notesReq.delete(`note/${id}`);
+
+//web-socket
+
+export const socket = io(process.env.REACT_APP_API_URL?.toString() ?? "http://localhost:1337/",  {
+  withCredentials: true,
+  extraHeaders: {
+    "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+    "2911a686-181a-11ec-9621-0242ac130002": "abcd"
+  }
+});
+export function RefreshByWS() {
+  socket.open();
+  socket.emit('refresher', 'refresh');
+}
+socket.on('refresher', res => {
+  console.log(res);
+  store.dispatch(refresh())
+  socket.close()
+});

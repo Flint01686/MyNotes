@@ -8,6 +8,9 @@ import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import ErrorMessage from './components/UI/ErrorMessage';
 import ForgotPassword from './components/Views/ForgotPassword/ForgotPassword';
 import ResetPassword from './components/Views/ForgotPassword/ResetPassword';
+import { socket } from './components/Requests';
+import { useDispatch } from 'react-redux';
+import { refresh } from './store/reducers/refreshReducer';
 
 interface Page{
   path: string;
@@ -16,6 +19,13 @@ interface Page{
 }
 
 function App() {
+  const dispatch = useDispatch()
+
+  // socket.on('refresher', res => {
+  //   console.log(res);
+  //   dispatch(refresh())
+  // });
+  
   let pages: Array<Page> = [
     {
       path: "/(home|)/:page?",

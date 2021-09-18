@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout'
 import Submit from '../UI/Submit'
 import TagInput from '../UI/TagInput'
 import Gallery from 'react-photo-gallery'
-import { addNote, getOneNoteById, updateNote } from '../Requests'
+import { addNote, getOneNoteById, RefreshByWS, updateNote } from '../Requests'
 import { useHistory, useParams } from 'react-router-dom'
 import { Note } from '../Interfaces/Note'
 import { Loader } from '../UI/Loader'
@@ -70,7 +70,7 @@ const CreateNote: FC = () =>
                 .then(res => { 
                     setRefreshState(false)
                     history.push('/'); 
-                    dispatch(refresh());
+                    RefreshByWS();
                 })
                 .catch(
                 e => {if (e.response.data.statusCode === 401) localStorage.removeItem('accessToken')} )
@@ -79,7 +79,7 @@ const CreateNote: FC = () =>
                     .then(res => { 
                         setRefreshState(false)
                         history.push('/'); 
-                        dispatch(refresh());
+                        RefreshByWS();
                     })
                     .catch(err => console.log(err))
             }
