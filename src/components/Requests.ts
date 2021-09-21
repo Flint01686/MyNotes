@@ -66,7 +66,7 @@ export const deleteNote = (id: number): Promise<AxiosResponse> => notesReq.delet
 export const socket = io(process.env.REACT_APP_API_URL?.toString() ?? "http://localhost:1337/",  {
   withCredentials: true,
   extraHeaders: {
-    // "authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     "2911a686-181a-11ec-9621-0242ac130002": "abcd"
   }
 });
