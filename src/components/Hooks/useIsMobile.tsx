@@ -1,5 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React, { useState, useEffect } from 'react'
+//TODO: chek
+import { useState, useEffect } from 'react'
 
 export function useIsMobile()
 {
@@ -20,7 +20,3 @@ export function useIsMobile()
 
     return isMobile;
 }
-
-// function refreshState() {
-//     throw new Error('Function not implemented.');
-// }

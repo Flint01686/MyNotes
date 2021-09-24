@@ -8,9 +8,7 @@ import { addNote, getOneNoteById, RefreshByWS, updateNote } from '../Requests'
 import { useHistory, useParams } from 'react-router-dom'
 import { Note } from '../Interfaces/Note'
 import { Loader } from '../UI/Loader'
-import { useDispatch } from 'react-redux'
 import Unauthorized from '../UI/Unauthorized'
-import { refresh } from '../../store/reducers/refreshReducer'
 
 interface PhotosI{
     index: number;
@@ -18,7 +16,6 @@ interface PhotosI{
 
 const CreateNote: FC = () =>
 {
-    const dispatch = useDispatch() 
     let { id } = useParams<{id: string}>();
     let numId = parseInt(id)
     const [currentNote, setCurrentNote] = useState<Note | null>(null)
@@ -32,7 +29,7 @@ const CreateNote: FC = () =>
             ...res.data,
             attachments: res.data.attachments.map((attach: string) =>{
                 setLocalAttachments(prev => prev.concat([attach]))
-                return `https://noteimg.s3.amazonaws.com/${attach}`})
+                return process.env.REACT_APP_S3_BUCKET_URL+attach})
         }))
         else setCurrentNote({
             isPinned: false,
@@ -60,7 +57,7 @@ const CreateNote: FC = () =>
                 NoteFormData.append("localAttachments", JSON.stringify(
                     localAttachments?.filter(attach =>
                         currentNote.attachments?.includes(
-                            `https://noteimg.s3.amazonaws.com/${attach}`))))
+                            process.env.REACT_APP_S3_BUCKET_URL+attach))))
             }
             
             

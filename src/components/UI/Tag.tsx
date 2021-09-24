@@ -5,12 +5,9 @@ import { TagStyle } from "../../style/TagStyle"
 const Tag: FC<{readonly onClick: Function}> = ({children, onClick}) =>
 {
     return (
-        // <div style={{display: "inline-flex"}}>
-            <TagStyle onClick={(e) => onClick(children)}>
-                {children}
-            </TagStyle>
-        // </div>
-        
+        <TagStyle onClick={(e) => onClick(children)}>
+            {children}
+        </TagStyle>        
     )
 }
 export default Tag;

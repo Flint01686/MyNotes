@@ -8,7 +8,6 @@ export const SidebarStyle = styled.div<SidebarI>`
     width: 100%;
     justify-content: center;
     display: flex;
-    // display: ${props => props.className === 'visible' ? 'flex' : 'none' }
 }
 .visible 
 .novisible{

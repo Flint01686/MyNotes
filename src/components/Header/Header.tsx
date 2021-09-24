@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { Nav, Navbar } from 'react-bootstrap';
 import { switchToggle } from '../../store/reducers/toggleReducer';
@@ -7,9 +7,7 @@ import Sidebar from '../UI/Sidebar';
 import PinnedNotes from '../Views/Home/PinnedNotes';
 import { RootState } from '../../store/reducers/rootReducer';
 import { HeaderStyle } from '../../style/HeaderStyle';
-import { Note } from '../Interfaces/Note';
 import { useHistory } from 'react-router';
-import { getPinnedNotes } from '../Requests';
 
 const Header: FC = () => 
 {

@@ -38,7 +38,6 @@ notesReq.interceptors.request.use(authInterceptor, (e) => {
   return Promise.reject(e);
 });
 notesReq.interceptors.response.use(res => res, (e) => {  
-  // console.log("err", e);
   
   alert(Object.entries(e))
   localStorage.removeItem('accessToken')
@@ -62,20 +61,15 @@ export const updateNote = (id: number, data: FormData): Promise<AxiosResponse> =
 export const deleteNote = (id: number): Promise<AxiosResponse> => notesReq.delete(`note/${id}`);
 
 //web-socket
-
 export const socket = io(process.env.REACT_APP_API_URL?.toString() ?? "http://localhost:1337/",  {
   withCredentials: true,
   extraHeaders: {
     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-    "2911a686-181a-11ec-9621-0242ac130002": "abcd"
   }
 });
 export function RefreshByWS() {
-  // socket.open();
   socket.emit('refresher', 'refresh');
 }
 socket.on('refresher', res => {
-  console.log(res);
   store.dispatch(refresh())
-  // socket.close()
 });

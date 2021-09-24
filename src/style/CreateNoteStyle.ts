@@ -47,7 +47,6 @@ export const CreateNoteStyle = styled.div`
             row-gap: 10px;
             justify-content: center;
         }
-        /* height: calc(100vh - 55.6px); */
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: repeat(auto-fill, 70px minmax(271px, 1fr));

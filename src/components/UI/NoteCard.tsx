@@ -1,10 +1,9 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Card } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { allNotesStateI } from '../../store/reducers/allNotesReducer';
 import { pinNotesStateI } from '../../store/reducers/pinnedNotes';
-import { refresh } from '../../store/reducers/refreshReducer';
 import { RootState } from '../../store/reducers/rootReducer';
 import { NodeCardStyle } from '../../style/NoteCardSytle';
 import { Note } from '../Interfaces/Note';
@@ -31,13 +30,11 @@ const NoteCard: FC<{id: number}> = ({id}) =>
 
     const history = useHistory();
     const mainImgSrc = (
-        // process.env.S3_BUCKET_NAME && 
         currentNote.attachments && 
         currentNote.attachments[0]
         ) ? (
-        `https://noteimg.s3.amazonaws.com/${currentNote.attachments[0]}`)
+        process.env.REACT_APP_S3_BUCKET_URL + currentNote.attachments[0])
         : "./default.png"
-    const dispatch = useDispatch() 
 
     function deleteCurrentNote(e: any)
     {
@@ -45,7 +42,6 @@ const NoteCard: FC<{id: number}> = ({id}) =>
         {
             deleteNote(id).then((res) => {                
                 RefreshByWS();
-                // dispatch(removeNote([id]));            
             })
             .catch((err) => alert(err))
         }
@@ -58,12 +54,6 @@ const NoteCard: FC<{id: number}> = ({id}) =>
         {
             cloneOneNoteById(id).then(res => RefreshByWS())
         }
-        // dispatch(addNoteForStore([{ 
-        //     attachments: attachments, 
-        //     tags: tags, 
-        //     text: text,
-        //     id: NaN,
-        //     ...other}]))
         e.stopPropagation()
     }
 
@@ -78,9 +68,6 @@ const NoteCard: FC<{id: number}> = ({id}) =>
                     <Card.Title>
                         <TagInput id={currentNote.id} readonly={true}></TagInput>        
                     </Card.Title>
-                    {/* <Card.Text>
-                        {currentNote.text}
-                    </Card.Text> */}
                     <p>
                         {currentNote.text}
                     </p>

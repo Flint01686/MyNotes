@@ -100,7 +100,6 @@ const AllNotes: FC = () =>
             <AllNotesListStyle>
                 {(notesState as allNotesStateI).notes.map((note,index) => <NoteCard
                     key={index} 
-                    // note={note}
                     id={note.id ?? NaN}
                 ></NoteCard>)}
             </AllNotesListStyle>

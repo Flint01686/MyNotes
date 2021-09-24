@@ -24,7 +24,6 @@ export const SubmitStyle = styled.input.attrs<SubmitI>(props => (
     -moz-user-select: none;     /* Firefox all */
     -ms-user-select: none;      /* IE 10+ */
     user-select: none;  
-    /* filter: contrast(50%); */
 
 }
 &:hover

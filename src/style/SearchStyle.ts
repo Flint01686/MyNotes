@@ -11,7 +11,6 @@ export const SearchStyle = styled.div`
     input[type=text]
     {
         outline: none;
-        /* min-width: 200px; */
         width:100%;
         border-radius: 5px 0 0 5px;
         background-color: #e9e9e9;
