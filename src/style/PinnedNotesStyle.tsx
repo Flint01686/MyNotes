@@ -20,6 +20,7 @@ h3
 {
     color: white;
     text-align: center;
+    margin-top: 20px;
 }
 @media screen and (max-width: 650px) { 
     padding: 10px;
