@@ -39,7 +39,7 @@ notesReq.interceptors.request.use(authInterceptor, (e) => {
 });
 notesReq.interceptors.response.use(res => res, (e) => {  
   
-  alert(Object.entries(e))
+  console.log(Object.entries(e))
   localStorage.removeItem('accessToken')
   window.location.href = 'auth';
   

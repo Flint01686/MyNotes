@@ -1,11 +1,9 @@
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { setNote } from "../store/reducers/allNotesReducer";
 import { getPageNotes, getPageNotesByFilter } from "./Requests";
 
 export function RefreshNotesState(filter = "", page = 0){
     const dispatch = useDispatch() 
-    const history = useHistory()
 
     try
         {
@@ -19,7 +17,7 @@ export function RefreshNotesState(filter = "", page = 0){
         }
         catch (e)
         {
-            alert(e)    
+            console.log(e)    
         }
 
 }

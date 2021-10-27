@@ -34,7 +34,7 @@ const NoteCard: FC<{id: number}> = ({id}) =>
         currentNote.attachments[0]
         ) ? (
         process.env.REACT_APP_S3_BUCKET_URL + currentNote.attachments[0])
-        : "./default.png"
+        : "/default.png"
 
     function deleteCurrentNote(e: any)
     {
@@ -43,7 +43,7 @@ const NoteCard: FC<{id: number}> = ({id}) =>
             deleteNote(id).then((res) => {                
                 RefreshByWS();
             })
-            .catch((err) => alert(err))
+            .catch((err) => console.log(err))
         }
         e.stopPropagation()
     }

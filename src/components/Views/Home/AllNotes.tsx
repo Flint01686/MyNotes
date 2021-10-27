@@ -65,7 +65,7 @@ const AllNotes: FC = () =>
         }
         catch (e)
         {
-            alert(e)     
+            console.log(e)     
         }
     }, [page, refresher, filter])
 
@@ -73,6 +73,7 @@ const AllNotes: FC = () =>
     else if ((notesState as allNotesStateI).notes.length === 0 && filter=== "") return (<div style={{
         display: "flex",
         flexDirection: "column",
+        textAlign: "center",
         alignItems: "center",
         marginTop: "20vh",
         }}> 
